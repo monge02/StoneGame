@@ -5,9 +5,16 @@ public class Game {
     public static void main(String[] args) {
         gameStart();
         Deck deck = new Deck();
-        for (int i = 0; i < 31; i++) {
-            System.out.println(deck.drawCard());
-        }
+        Player p1 = new Player("플레이어1");
+        p1.drawCard(deck);
+        p1.drawCard(deck);
+        p1.drawCard(deck);
+        p1.drawCard(deck);
+        p1.drawCard(deck);
+        p1.drawCard(deck);
+        p1.showHand();
+        p1.playCard(1);
+        p1.showHand();
         gameEnd();
     }
 
