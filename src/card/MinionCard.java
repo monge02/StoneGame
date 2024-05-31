@@ -1,21 +1,19 @@
 package card;
 
-public class MonsterCard extends Card {
+public class MinionCard extends Card {
 
     private int hp;
     private int attack;
 
-    public MonsterCard(int cost, String name, int hp, int attack) {
+    public MinionCard(int cost, String name, int hp, int attack) {
         super(cost, name);
         this.hp = hp;
         this.attack = attack;
     }
 
-    public int getHp() {
-        return hp;
-    }
-
-    public int getAttackDamage() {
+    @Override
+    public int useCard() {
+        System.out.println(this + "를 냅니다.");
         return attack;
     }
 
