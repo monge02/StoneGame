@@ -2,8 +2,8 @@ package card;
 
 public class MinionCard extends Card {
 
-    private int hp;
-    private int attack;
+    private final int hp;
+    private final int attack;
 
     public MinionCard(int cost, String name, int hp, int attack) {
         super(cost, name);

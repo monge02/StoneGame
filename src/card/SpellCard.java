@@ -2,8 +2,8 @@ package card;
 
 public class SpellCard extends Card {
 
-    private int spellDamage;
-    private int areaOfEffect;
+    private final int spellDamage;
+    private final int areaOfEffect;
 
     public SpellCard(int cost, String name, int spellDamage, int areaOfEffect) {
         super(cost, name);

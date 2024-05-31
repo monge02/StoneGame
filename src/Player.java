@@ -2,6 +2,7 @@ import card.Card;
 import card.Deck;
 import card.MinionCard;
 import card.SpellCard;
+import clazz.Clazz;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,25 +14,37 @@ public class Player {
     private int armor;
     private int mana;
     private int tempMana = mana;
+    private Clazz clazz;
     private List<Card> hand;
     private List<Card> field;
 
-    public Player(String name) {
+    public Player(String name, Clazz clazz) {
         this.name = name;
         hp = 30;
         armor = 0;
         mana = 0;
-        tempMana = mana;
+        tempMana = 0;
+        this.clazz = clazz;
         hand = new ArrayList<>();
         field = new ArrayList<>();
     }
 
-    // 턴 시작시 마나가 돌아오며, 마나의 최대치는 10이다.
+    // 사용가능한 마나가 있으면 스킬을 사용한다
+    public void useSkill(Player opponent) {
+        if (!canUseMana()) {
+            System.out.println("마나가 부족합니다.");
+            return;
+        }
+        opponent.reduceHp(clazz.useSkill());
+        System.out.println("사용가능한 마나: " + tempMana);
+        tempMana -= 2;
+    }
+
+    // 턴 시작시 마나가 돌아오며, 마나의 최대치는 10이다
     public void startTurn() {
         if (mana >= 10) {
             tempMana = mana;
             System.out.println(name + "의 마나가 최대치 입니다.");
-            return;
         } else {
             increaseMana();
             tempMana = mana;
@@ -59,6 +72,7 @@ public class Player {
             System.out.println("선택한 카드는 손에 없습니다.");
             return false;
         }
+
         Card card = hand.get(cardIndex - 1); // 손에 카드가 있으면 입력한 숫자로 선택
         if (!canUseCard(card)) { // 손에 카드가 있으나 사용할 마나가 부족하면 false
             System.out.println("선택한 카드를 사용할 마나가 부족합니다.");
@@ -114,7 +128,7 @@ public class Player {
 
     // 카드를 필드에 낼때 코스트만큼 마나 감소
     private void decreaseMana(int cardCost) {
-        this.tempMana -= cardCost;
+        tempMana -= cardCost;
     }
 
     // 맞았을때 체력이 감소하는 기능
