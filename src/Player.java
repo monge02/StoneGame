@@ -35,6 +35,7 @@ public class Player {
             System.out.println("마나가 부족합니다.");
             return;
         }
+
         opponent.reduceHp(clazz.useSkill());
         System.out.println("사용가능한 마나: " + tempMana);
         tempMana -= 2;
@@ -45,15 +46,16 @@ public class Player {
         if (mana >= 10) {
             tempMana = mana;
             System.out.println(name + "의 마나가 최대치 입니다.");
-        } else {
-            increaseMana();
-            tempMana = mana;
+            return;
         }
+
+        increaseMana();
+        tempMana = mana;
     }
 
     // 덱에서 카드를 뽑는 행위
     public void drawCard(Deck deck) {
-        hand.add(deck.drawCard()); // 덱에서 카드를 한장 제거하고 손에 넣는다
+        hand.add(deck.drawCard());  // 덱에서 카드를 한장 제거하고 손에 넣는다
         System.out.println(deck.drawCard() + "를 뽑았습니다.");
         cardOverflow();
         System.out.println();
@@ -67,39 +69,49 @@ public class Player {
     }
 
     // 선택한 카드를 적에게 사용하는 기능
-    public boolean useCard(int cardIndex, Player opponent) {
-        if (!hasCardInHand(cardIndex)) { // 손에 카드가 없으면 false
+    public boolean activateCard(int cardIndex, Player opponent) {
+        if (!hasCardInHand(cardIndex)) {
             System.out.println("선택한 카드는 손에 없습니다.");
-            return false;
+            return false;   // 손에 카드가 없으면 false
         }
 
-        Card card = hand.get(cardIndex - 1); // 손에 카드가 있으면 입력한 숫자로 선택
-        if (!canUseCard(card)) { // 손에 카드가 있으나 사용할 마나가 부족하면 false
+        Card card = hand.get(cardIndex - 1);    // 손에 카드가 있으면 입력한 숫자로 선택
+        if (!canUseCard(card)) {
             System.out.println("선택한 카드를 사용할 마나가 부족합니다.");
-            return false;
+            return false;   // 손에 카드가 있으나 사용할 마나가 부족하면 false
         }
 
-        // 손에 카드가 있고 사용가능한 마나일때, 카드의 코스트만큼 마나를 소모하고 주문 카드이면 바로 발동해서 적의 Hp를 깍는 행동
-        if (card instanceof SpellCard spellcard) { // 입력한 숫자의 카드가 주문 카드이면 아래 진행
-            decreaseMana(spellcard.getCost()); // 주문 카드의 코스트만큼 마나 감소
-            opponent.reduceHp(spellcard.useCard()); // 주문 카드의 데미지만큼 상대방의 체력 소모
-            System.out.println();
-            hand.remove(spellcard); // 발동 주문 카드 제거
+        return isItSpellCardMinionCard(opponent, card);
+    }
+
+    private boolean isItSpellCardMinionCard(Player opponent, Card card) {
+        // 주문 카드이면 바로 발동해서 적의 Hp를 깍는 행동
+        if (card instanceof SpellCard spellcard) {
+            useSelectedCard(opponent, spellcard);
             return true;
-        } else if (card instanceof MinionCard minioncard) { // 입력한 숫자의 카드가 하수인 카드이면 아래 진행
-            if (field.size() > 7) { // 필드에는 최대 7장의 하수인 카드를 낼 수 있다
+        }
+
+        // 하수인 카드이면 필드에 내고 공격해서 적의 Hp를 깍는 행동
+        if (card instanceof MinionCard minioncard) {    // 입력한 숫자의 카드가 하수인 카드이면 아래 진행
+            if (field.size() > 7) {
                 System.out.println("필드에 낼 수 있는 하수인이 가득 찼습니다.");
-                return false;
+                return false;   // 필드에는 최대 7장의 하수인 카드를 낼 수 있다
             }
+
             field.add(minioncard); // 필드에 하수인 카드 추가
             System.out.println("필드에 있는 하수인 수: " + field.size() + "/7");
-            decreaseMana(minioncard.getCost()); // 하수인 카드의 코스트만큼 마나 감소
-            opponent.reduceHp(minioncard.useCard()); // 하수인 카드의 데미지만큼 상대방의 체력 소모
-            System.out.println();
-            hand.remove(minioncard); // 손에서 하수인 카드 제거
+            useSelectedCard(opponent, minioncard);
             return true;
         }
         return false;
+    }
+
+    // 선택한 카드를 사용했을때
+    private void useSelectedCard(Player opponent, Card card) {
+        decreaseMana(card.getCost());   // 카드의 코스트만큼 마나 감소
+        opponent.reduceHp(card.useCard());  // 카드의 데미지만큼 상대방의 체력 소모
+        System.out.println();
+        hand.remove(card);  // 손에서 카드 제거
     }
 
     // 손에 있는 카드를 필드에 낼 때 입력받은 숫자가 있는지 확인

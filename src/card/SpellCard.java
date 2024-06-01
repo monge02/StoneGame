@@ -17,11 +17,14 @@ public class SpellCard extends Card {
         if (spellDamage > 0) {
             System.out.println(spellDamage + "의 단일 데미지를 입힙니다.");
             return spellDamage;
-        } else if (areaOfEffect > 0) {
+        }
+
+        if (areaOfEffect > 0) {
             System.out.println(areaOfEffect + "의 광역 데미지를 입힙니다.");
             return areaOfEffect;
-        } else
-            return 0;
+        }
+
+        return 0;
     }
 
     @Override
@@ -31,7 +34,9 @@ public class SpellCard extends Card {
                     super.toString() +
                     " 단일공격: " + spellDamage +
                     ']';
-        } else if (areaOfEffect > 0) {
+        }
+
+        if (areaOfEffect > 0) {
             return "주문 " +
                     super.toString() +
                     " 광역공격: " + areaOfEffect +

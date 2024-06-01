@@ -15,23 +15,23 @@ public class Deck {
         System.out.println();
     }
 
+    private void initCard() {
+        createSpellCard();
+        createMinionCard();
+    }
+
     private void createSpellCard() {
-        cards.add(new SpellCard(2, "눈보라", 0, 2));
-        cards.add(new SpellCard(2, "화염구", 3, 0));
+        for (int i = 0; i < 5; i++) {
+            cards.add(new SpellCard(2, "눈보라", 0, 2));
+            cards.add(new SpellCard(2, "화염구", 3, 0));
+        }
     }
 
     private void createMinionCard() {
-        cards.add(new MinionCard(2, "혈법사 탈노스", 1, 1));
-        cards.add(new MinionCard(2, "리로이 젠킨스", 2, 2));
-        cards.add(new MinionCard(2, "실바나스 윈드러너", 3, 3));
-    }
-
-    private void initCard() {
         for (int i = 0; i < 10; i++) {
-            createMinionCard();
-        }
-        for (int i = 0; i < 5; i++) {
-            createSpellCard();
+            cards.add(new MinionCard(2, "혈법사 탈노스", 1, 1));
+            cards.add(new MinionCard(2, "리로이 젠킨스", 2, 2));
+            cards.add(new MinionCard(2, "실바나스 윈드러너", 3, 3));
         }
     }
 
