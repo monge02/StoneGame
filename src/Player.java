@@ -84,7 +84,6 @@ public class Player {
         return isItSpellCardMinionCard(opponent, card);
     }
 
-    //
     private boolean isItSpellCardMinionCard(Player opponent, Card card) {
         // 주문 카드이면 바로 발동해서 적의 Hp를 깍는 행동
         if (card instanceof SpellCard spellcard) {
